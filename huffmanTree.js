@@ -1,4 +1,16 @@
-import MinHeap from "./heap.mjs";
+import MinHeap from "./heap.js";
+export function calculateFrequency(input) {
+  let hash = new Map();
+  for (let element of input) {
+    if (!hash.has(element)) {
+      hash.set(element, 1);
+    } else {
+      let value = hash.get(element);
+      hash.set(element, value + 1);
+    }
+  }
+  return hash;
+}
 
 class HuffmanBaseNode {
   _isLeaf() {}
@@ -107,4 +119,12 @@ export function generateCodes(node, prefix = "", codes = {}) {
     }
   }
   return codes;
+}
+
+export function createHuffmanHeap(freq) {
+  const Hheap = new MinHeap();
+  for (const [element, weight] of freq.entries()) {
+    Hheap.add(new HuffTree(element, weight));
+  }
+  return Hheap;
 }
