@@ -18,9 +18,16 @@ app.use(
     methods: "GET,POST",
   })
 );
+
+const mainDir = path.dirname(__dirname);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use("/public", express.static("public"));
+app.use(express.static(path.join(mainDir, "/frontend/dist")));
+
+app.get("*", (req, res) =>
+  res.sendFile(path.join(mainDir, "/frontend/dist/index.html"))
+);
 
 app.get("/", (req, res) => {
   res.send("hello");
