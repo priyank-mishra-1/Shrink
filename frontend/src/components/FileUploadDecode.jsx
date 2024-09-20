@@ -22,13 +22,9 @@ const FileUploadDecode = ({ onUpload }) => {
     formData.append("file", file);
     formData.append("uploadedFileName", filename);
 
-    const response = await axios.post(
-      "http://localhost:5000/upload-file",
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
+    const response = await axios.post("/upload-file", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     setFilename(response.data.uploadedFileName);
     console.log(response.data);
     if (response.data.success == true) {
@@ -37,16 +33,14 @@ const FileUploadDecode = ({ onUpload }) => {
   };
 
   const handleDecode = async () => {
-    const response = await axios.get(
-      `http://localhost:5000/decode?uploadedFileName=${filename}`
-    );
+    const response = await axios.get(`/decode?uploadedFileName=${filename}`);
     console.log(response.data.huffmanTree);
     setIsDecoded(true);
     onUpload(response.data.huffmanTree);
   };
 
   const handleDownload = async () => {
-    const fileUrl = `http://localhost:5000/decode/download?uploadedFileName=${filename}`;
+    const fileUrl = `/decode/download?uploadedFileName=${filename}`;
     window.open(fileUrl, "_blank");
     setIsDownloaded(true);
   };

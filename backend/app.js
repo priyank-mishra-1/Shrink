@@ -25,10 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(path.join(mainDir, "/frontend/dist")));
 
-app.get("*", (req, res) =>
-  res.sendFile(path.join(mainDir, "/frontend/dist/index.html"))
-);
-
 app.get("/", (req, res) => {
   res.send("hello");
 });
@@ -41,17 +37,9 @@ app.post("/upload-file", upload.single("file"), async (req, res) => {
     });
   } else {
     console.log("File received");
-    const uploadedFilePath = path.join(
-      __dirname,
-      "uploads",
-      req.uploadedFileName
-    );
-    const host = req.hostname;
-    const filePath = req.protocol + "://" + host + "/" + uploadedFilePath;
 
     return res.send({
       success: true,
-      filePath,
       uploadedFileName: req.uploadedFileName,
     });
   }
@@ -200,6 +188,10 @@ app.get("/decode/download", (req, res) => {
     });
   }
 });
+
+app.get("*", (req, res) =>
+  res.sendFile(path.join(mainDir, "/frontend/dist/index.html"))
+);
 
 app.listen(PORT, () => {
   console.log(`App is listening on http://localhost:${PORT}`);
