@@ -22,13 +22,9 @@ const FileUpload = ({ onUpload }) => {
     formData.append("file", file);
     formData.append("uploadedFileName", filename);
 
-    const response = await axios.post(
-      "http://localhost:5000/upload-file",
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
+    const response = await axios.post("/upload-file", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     setFilename(response.data.uploadedFileName);
     console.log(response.data);
     if (response.data.success == true) {
@@ -40,16 +36,14 @@ const FileUpload = ({ onUpload }) => {
     // const formData = new FormData();
     // formData.append('uploadedFileName', filename);
 
-    const response = await axios.get(
-      `http://localhost:5000/encode?uploadedFileName=${filename}`
-    );
+    const response = await axios.get(`/encode?uploadedFileName=${filename}`);
     console.log(response.data.huffmanTree);
     setIsEncoded(true);
     onUpload(response.data.huffmanTree);
   };
 
   const handleDownload = async () => {
-    const fileUrl = `http://localhost:5000/encode/download?uploadedFileName=${filename}`;
+    const fileUrl = `/encode/download?uploadedFileName=${filename}`;
     window.open(fileUrl, "_blank");
     setIsDownloaded(true);
   };
