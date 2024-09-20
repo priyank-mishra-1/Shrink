@@ -1,14 +1,23 @@
 import express from "express";
 import "dotenv/config";
 import morgan from "morgan";
-import { __dirname, upload } from "./multer-config.js";
+import path from "path";
+import { upload, __dirname } from "./multer-config.js";
 import { encoding, decoding } from "../encode-decode.js";
+import cors from "cors";
+import fs from "fs/promises";
 
-const PORT = process.env.PORT | 5000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,POST",
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use("/public", express.static("public"));
@@ -17,69 +26,172 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 
-app.post("/upload-file", upload.single("file"), (req, res) => {
+app.post("/upload-file", upload.single("file"), async (req, res) => {
   if (!req.file) {
     console.log("No file received");
     return res.send({
       success: false,
     });
   } else {
-    console.log("file received");
+    console.log("File received");
+    const uploadedFilePath = path.join(
+      __dirname,
+      "uploads",
+      req.uploadedFileName
+    );
     const host = req.hostname;
-    const filePath = req.protocol + "://" + host + "/" + req.file.path;
+    const filePath = req.protocol + "://" + host + "/" + uploadedFilePath;
+
     return res.send({
       success: true,
       filePath,
+      uploadedFileName: req.uploadedFileName,
     });
   }
 });
 
 app.get("/encode", async (req, res) => {
   try {
-    await encoding(
-      `${__dirname}/uploads/file.txt`,
-      `${__dirname}/compressed/compressed.bin`
+    const uploadedFilePath = path.join(
+      __dirname,
+      "uploads",
+      req.query.uploadedFileName
+    );
+    const compressedFileName = `${
+      path.parse(req.query.uploadedFileName).name
+    }.bin`;
+    const compressedFilePath = path.join(
+      __dirname,
+      "downloads",
+      compressedFileName
+    );
+
+    const { huffmanTree, codes } = await encoding(
+      uploadedFilePath,
+      compressedFilePath
     );
     res.send({
       success: true,
-      message: "file encoded",
+      message: "File encoded",
+      huffmanTree,
+      codes,
     });
   } catch (error) {
-    console.log("error in encoding file");
+    console.log("Error in encoding file", error);
     res.send({
       success: false,
-      message: "error in encoding file",
+      message: "Error in encoding file",
     });
   }
 });
 
 app.get("/encode/download", (req, res) => {
-  const file = `${__dirname}/compressed/compressed.bin`;
-  res.download(file);
+  try {
+    const compressedFileName = `${
+      path.parse(req.query.uploadedFileName).name
+    }.bin`;
+    const uploadedFilename = `${
+      path.parse(req.query.uploadedFileName).name
+    }.txt`;
+    const file = path.join(__dirname, "downloads", compressedFileName);
+    const uploadedFile = path.join(__dirname, "uploads", uploadedFilename);
+    res.download(file, (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ err: "error in downloading file" });
+      } else {
+        fs.unlink(file, (unlinkErr) => {
+          if (unlinkErr) {
+            console.log(`Error in deleting file: ${unlinkErr}`);
+          }
+        });
+        fs.unlink(uploadedFile, (unlinkErr) => {
+          if (unlinkErr) {
+            console.log(`Error in deleting file: ${unlinkErr}`);
+          }
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      err: "error in downloading file",
+    });
+  }
 });
 
 app.get("/decode", async (req, res) => {
   try {
-    await decoding(
-      `${__dirname}/compressed/compressed.bin`,
-      `${__dirname}/extracted/file.txt`
+    const compressedFileName = `${
+      path.parse(req.query.uploadedFileName).name
+    }.bin`;
+    const compressedFilePath = path.join(
+      __dirname,
+      "uploads",
+      compressedFileName
+    );
+    const extractedFileName = `${
+      path.parse(req.query.uploadedFileName).name
+    }.txt`;
+    const extractedFilePath = path.join(
+      __dirname,
+      "downloads",
+      extractedFileName
+    );
+
+    console.log(compressedFileName);
+
+    const { huffmanTree } = await decoding(
+      compressedFilePath,
+      extractedFilePath
     );
     res.send({
       success: true,
-      message: "file extracted",
+      message: "File extracted",
+      huffmanTree,
     });
   } catch (error) {
-    console.log("error in decoding file");
+    console.log("Error in decoding file", error);
     res.send({
       success: false,
-      message: "error in decoding file",
+      message: "Error in decoding file",
     });
   }
 });
 
 app.get("/decode/download", (req, res) => {
-  const file = `${__dirname}/extracted/file.txt`;
-  res.download(file);
+  try {
+    const extractedFileName = `${
+      path.parse(req.query.uploadedFileName).name
+    }.txt`;
+    const uploadedFilename = `${
+      path.parse(req.query.uploadedFileName).name
+    }.bin`;
+    const file = path.join(__dirname, "downloads", extractedFileName);
+    const uploadedFile = path.join(__dirname, "uploads", uploadedFilename);
+    res.download(file, (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ err: "error in downloading file" });
+      } else {
+        fs.unlink(file, (unlinkErr) => {
+          if (unlinkErr) {
+            console.log(`Error in deleting file: ${unlinkErr}`);
+          }
+        });
+        fs.unlink(uploadedFile, (unlinkErr) => {
+          if (unlinkErr) {
+            console.log(`Error in deleting file: ${unlinkErr}`);
+          }
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      err: "error in downloading file",
+    });
+  }
 });
 
 app.listen(PORT, () => {

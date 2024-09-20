@@ -89,6 +89,8 @@ async function encoding(srcPath, destPath) {
     );
 
     console.log("Data compressed successfully!");
+
+    return { huffmanTree, codes };
   } catch (err) {
     console.error("Error during encoding:", err);
   }
@@ -102,7 +104,7 @@ async function decoding(srcPath, destPath) {
 
     // Read the header length and header
     const headerLength = data.readUInt32BE(0);
-    console.log(headerLength);
+    // console.log(headerLength);
     const header = data.toString("utf8", 4, 4 + headerLength);
     // console.log(header);
 
@@ -139,6 +141,7 @@ async function decoding(srcPath, destPath) {
 
     // console.log("Decoded data:", decodedData);
     await fs.writeFile(destPath, decodedData);
+    return { huffmanTree };
   } catch (err) {
     console.error("Error during decoding:", err);
   }

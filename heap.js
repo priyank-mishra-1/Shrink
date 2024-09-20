@@ -15,7 +15,6 @@ class MinHeap {
     this._heapifyDown(0);
     return root;
   }
-
   _heapifyUp(index) {
     while (index > 0) {
       const parentIndex = Math.floor((index - 1) / 2);
