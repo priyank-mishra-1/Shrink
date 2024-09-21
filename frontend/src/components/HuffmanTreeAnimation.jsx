@@ -15,16 +15,16 @@ const HuffmanTreeAnimation = ({ data }) => {
     }));
 
     const heap = [...initialNodes];
-    const mergeSteps = []; // contains steps for building huffman tree
-    mergeSteps.push([...heap]); // Step 0: initial nodes
+    const mergeSteps = [];
+    mergeSteps.push([...heap]);
 
     while (heap.length > 1) {
-      heap.sort((a, b) => a.weight - b.weight); // to make min heap
+      heap.sort((a, b) => a.weight - b.weight);
 
       const left = heap.shift();
       const right = heap.shift();
 
-      mergeSteps.push([...heap, left, right]); // Step before merging (highlight the nodes)
+      mergeSteps.push([...heap, left, right]);
 
       const newNode = {
         id: `${left.id}-${right.id}`,
@@ -35,7 +35,7 @@ const HuffmanTreeAnimation = ({ data }) => {
       };
 
       heap.push(newNode);
-      mergeSteps.push([...heap]); // Step after merging (include the new subtree)
+      mergeSteps.push([...heap]);
     }
 
     setSteps(mergeSteps);
@@ -50,7 +50,7 @@ const HuffmanTreeAnimation = ({ data }) => {
     svg.selectAll("*").remove();
 
     const svgGroup = svg
-      .attr("viewBox", [0, 0, 500, 600])
+      .attr("viewBox", [-40, -30, 500, 350])
       .call(
         d3.zoom().on("zoom", (event) => {
           svgGroup.attr("transform", event.transform);
@@ -58,9 +58,9 @@ const HuffmanTreeAnimation = ({ data }) => {
       )
       .append("g");
 
-    const height = 600;
+    const height = 350;
     const topPadding = 40;
-    const subtreeSpacing = 200;
+    const subtreeSpacing = 100; // reduced subtree spacing
 
     const currentNodes = steps[currentStep];
 
@@ -91,13 +91,12 @@ const HuffmanTreeAnimation = ({ data }) => {
       d3.hierarchy(buildHierarchy(node)).sum((d) => d.weight)
     );
 
-    // Set up tree layout
-    const treeLayout = d3.tree().nodeSize([70, 150]);
+    const treeLayout = d3.tree().nodeSize([35, 75]); // reduced node size
 
     // Draw each subtree
     subTrees.forEach((root, i) => {
-      const xOffset = (i % 4) * subtreeSpacing + 150; // distance in x b/w subtrees
-      const yOffset = Math.floor(i / 4) * (height / 4); // distance in y b/w subtrees
+      const xOffset = (i % 4) * subtreeSpacing + 75; // reduced xOffset
+      const yOffset = Math.floor(i / 4) * (height / 4);
 
       const treeData = treeLayout(root);
 
@@ -115,7 +114,7 @@ const HuffmanTreeAnimation = ({ data }) => {
         .attr("x2", (d) => d.target.x + xOffset)
         .attr("y2", (d) => d.target.y + yOffset + topPadding)
         .attr("stroke", "white")
-        .attr("stroke-width", 2);
+        .attr("stroke-width", 1); // reduced stroke width
 
       // for nodes in tree
       svgGroup
@@ -129,7 +128,7 @@ const HuffmanTreeAnimation = ({ data }) => {
           (d) => `translate(${d.x + xOffset},${d.y + yOffset + topPadding})`
         )
         .append("circle")
-        .attr("r", 20)
+        .attr("r", 10) // reduced circle radius
         .attr("fill", "lightgreen");
 
       svgGroup
@@ -137,6 +136,7 @@ const HuffmanTreeAnimation = ({ data }) => {
         .append("text")
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
+        .style("font-size", "10px") // reduced font size
         .text((d) =>
           d.data.element
             ? `${d.data.element} (${d.data.weight})`
@@ -151,24 +151,25 @@ const HuffmanTreeAnimation = ({ data }) => {
       .enter()
       .append("g")
       .attr("class", "node-pool")
-      .attr("transform", (d, i) => `translate(${i * 70},${height - 80})`); // for spacing b/w nodes
+      .attr("transform", (d, i) => `translate(${i * 35},${height - 80})`); // reduced spacing between nodes
 
-    pool.append("circle").attr("r", 20).attr("fill", "lightblue");
+    pool.append("circle").attr("r", 10).attr("fill", "lightblue");
 
     pool
       .append("text")
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
+      .style("font-size", "10px") // reduced font size
       .text((d) => `${d.element} (${d.weight})`);
 
     // Highlight the nodes being merged in the current step
     if (currentStep % 2 === 1) {
-      const mergeNodes = steps[currentStep].slice(-2); // Last two nodes to be merged, as it is sorted
+      const mergeNodes = steps[currentStep].slice(-2);
       svgGroup
         .selectAll(".node-pool")
         .filter((d) => mergeNodes.some((n) => n.id === d.id))
         .select("circle")
-        .attr("fill", "orange"); // Highlight the nodes in orange
+        .attr("fill", "orange");
     }
   }, [steps, currentStep]);
 
@@ -180,25 +181,25 @@ const HuffmanTreeAnimation = ({ data }) => {
   };
 
   return (
-    <div className="my-10 flex-col text-center">
-      <h3 className="text-2xl text-white">Visualization</h3>
+    <div className="my-5 lg:my-10 flex-col text-center">
+      <h3 className="text-base font-semibold lg:text-2xl text-white">
+        Visualization
+      </h3>
       <div className="relative flex justify-center">
         <svg
           id="huffmanTree"
-          width="1000"
-          height="600"
-          className="my-5 border-[1px] border-white rounded-xl"
+          className="my-5 border-[1px] border-white rounded-xl w-[70%] h-[80%] lg:w-[60%] lg:h-3/4"
         ></svg>
-        <p className="text-white absolute md:top-6 md:left-auto">
+        <p className="text-white absolute text-xs top-6 lg:text-sm">
           Step: {currentStep + 1} / {steps.length}
         </p>
-        <p className="text-white absolute md:right-48 md:top-8 lg:right-72">
+        <p className="text-white absolute invisible lg:right-[22%] lg:top-7 lg:text-sm lg:visible">
           Scroll to zoom | Drag to pan
         </p>
         <button
           onClick={handleNextStep}
           disabled={currentStep >= steps.length - 1}
-          className="p-1 text-white ring-1 ring-white rounded absolute md:bottom-12 md:right-48 lg:right-80 disabled:opacity-25 hover:bg-opacity-20 hover:bg-white"
+          className="text-xs px-1 lg:p-1 text-white rounded-md bottom-8 right-[17%] drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black absolute md:text-sm lg:bottom-10 lg:right-[22%] disabled:opacity-25"
         >
           Next Step
         </button>

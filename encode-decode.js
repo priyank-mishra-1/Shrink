@@ -24,6 +24,12 @@ function addPadding(binaryString) {
   };
 }
 
+// sort freq based on keys for consistency in encoded and dexoded codes
+function sortFreq(freq) {
+  let sortedByKey = new Map([...freq].sort((a, b) => a[0].localeCompare(b[0])));
+  return sortedByKey;
+}
+
 // Convert a binary string to a byte array
 function binaryStringToByteArray(binaryString) {
   const byteArray = [];
@@ -63,8 +69,9 @@ async function encoding(srcPath, destPath) {
     const data = await fs.readFile(srcPath, {
       encoding: "utf8",
     });
-    const freq = calculateFrequency(data);
+    const unsortedfreq = calculateFrequency(data);
     // console.log(freq);
+    const freq = sortFreq(unsortedfreq);
 
     let Hheap = createHuffmanHeap(freq); // min heap
     const huffmanTree = buildHuffmanTree(Hheap);
@@ -115,7 +122,9 @@ async function decoding(srcPath, destPath) {
     // console.log("freq:", freqObj);
     // console.log(paddingLength);
 
-    const freq = new Map(Object.entries(freqObj)); //creating Map from freq object
+    const unsortedfreq = new Map(Object.entries(freqObj)); //creating Map from freq object
+    const freq = sortFreq(unsortedfreq);
+    console.log("freq decoding: ", freq);
 
     // Rebuild the Huffman tree
     let Hheap = createHuffmanHeap(freq); // min heap

@@ -6,8 +6,8 @@ const HuffmanTreeVisualizer = ({ treeData }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    const width = 1000;
-    const height = 600;
+    const width = 600;
+    const height = 400;
     const margin = { top: 20, right: 90, bottom: 30, left: 90 };
 
     // Zoom and pan behavior
@@ -93,15 +93,15 @@ const HuffmanTreeVisualizer = ({ treeData }) => {
 
   return (
     <div className="mt-12 flex-col text-center">
-      <h3 className="text-2xl text-white font-semibold">
+      <h3 className="text-base lg:text-2xl text-white font-semibold">
         Huffman Tree created for your file 🌲
       </h3>
       <div className="relative flex justify-center">
         <svg
           ref={svgRef}
-          className="mx-10 my-7 border-[1px] border-white rounded-xl"
+          className="mx-10 my-7 w-[70vw] h-[70vh] lg:w-[65%] lg:h-[60vh] border-[1px] border-white rounded-xl"
         ></svg>
-        <p className="text-white absolute md:right-48 md:top-10 lg:right-51">
+        <p className="text-white absolute invisible lg:right-[18%] lg:top-7 lg:text-sm lg:visible">
           Scroll to zoom | Drag to pan
         </p>
       </div>

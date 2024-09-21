@@ -6,7 +6,7 @@ const Heading = () => {
   return (
     <div className="relative h-auto flex justify-center">
       <h1
-        className={`text-center my-16 text-white text-6xl font-bold drop-shadow-custom-white ${
+        className={`text-center my-10 text-4xl font-semibold lg:my-16 text-white lg:text-6xl lg:font-bold drop-shadow-custom-white ${
           hovered ? "hidden" : ""
         }`}
         onMouseEnter={() => setHovered(true)}
@@ -14,7 +14,7 @@ const Heading = () => {
         Huffman Encoder
       </h1>
       <h1
-        className={`text-center my-16 text-white text-6xl drop-shadow-custom-white ${
+        className={`text-center my-10 text-4xl font-semibold lg:my-16 text-white lg:text-6xl drop-shadow-custom-white ${
           hovered ? "" : "hidden"
         }`}
         onMouseLeave={() => setHovered(false)}

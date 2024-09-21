@@ -46,39 +46,43 @@ const FileUploadDecode = ({ onUpload }) => {
   };
 
   return (
-    <div className="flex-col">
-      <input className="text-white" type="file" onChange={handleFileChange} />
+    <div className="w-[60%] md:w-auto lg:w-auto">
+      <input
+        className="text-white text-xs lg:text-base"
+        type="file"
+        onChange={handleFileChange}
+      />
       <br />
-      <div className="flex items-center">
+      <div className="flex flex-col text-xs items-start lg:text-base lg:flex-row lg:items-center">
         <button
           onClick={handleUpload}
-          className="m-4 p-2 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
+          className="my-4 mx-5 p-2 lg:mx-4 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
         >
           Upload Compressed .bin file
         </button>
-        <p className="text-white">
+        <p className="text-white text-center mx-5 lg:mx-4">
           {isUploaded && "File uploaded successfully ✅"}
         </p>
       </div>
-      <div className="flex items-center">
+      <div className="flex flex-col text-xs items-start lg:text-base lg:flex-row lg:items-center">
         <button
           onClick={handleDecode}
-          className="m-4 p-2 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
+          className="my-4 mx-5 p-2 lg:mx-4 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
         >
           Decode and Generate Tree
         </button>
-        <p className="text-white">
+        <p className="text-white text-center mx-5 lg:mx-4">
           {isDecoded && "File Decoded successfully 😊"}
         </p>
       </div>
-      <div className="flex items-center">
+      <div className="flex flex-col text-xs items-start lg:text-base lg:flex-row lg:items-center">
         <button
           onClick={handleDownload}
-          className="m-4 p-2 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
+          className="my-4 mx-5 p-2 lg:mx-4 text-white rounded-lg drop-shadow-custom-purple ring-1 ring-purple-600 hover:bg-purple-200 hover:text-black"
         >
           Download Decoded file
         </button>
-        <p className="text-white">
+        <p className="text-white text-center mx-5 lg:mx-4">
           {isDownloaded && "File download initiated 🤘"}
         </p>
       </div>

@@ -17,7 +17,7 @@ const References = () => {
   };
 
   return (
-    <div className="m-5 p-2 w-full flex flex-col items-center">
+    <div className="m-2 p-1 text-xs lg:text-base lg:m-5 lg:p-2 w-full flex flex-col items-center ">
       <div className="text-white">
         <button
           onClick={toggleReferences}

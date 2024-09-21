@@ -1,10 +1,10 @@
 const MainContent = () => {
   return (
-    <div className="flex justify-center">
-      <div className="text-white my-3 w-1/2">
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+    <div className="flex justify-center w-full">
+      <div className="text-white my-3 w-[75%] text-xs lg:text-base md:w-[60%] lg:w-[60%]">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Introduction to{" "}
-          <span className="bg-gradient-to-r from-pink-300 via-slate-500 to-purple-500 bg-clip-text text-2xl tracking-tight text-transparent lg:text-3xl">
+          <span className="bg-gradient-to-r from-pink-300 via-slate-500 to-purple-500 bg-clip-text text-xl tracking-tight text-transparent lg:text-3xl">
             Huffman Encoding
           </span>
         </h3>
@@ -15,7 +15,7 @@ const MainContent = () => {
           <b>variable-length encoding</b>, which means that more frequent items
           get shorter codes, while less frequent ones get longer codes.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Why Compression Matters
         </h3>
         <p>
@@ -31,7 +31,7 @@ const MainContent = () => {
           less common characters. Once compressed, the file can be easily
           restored (or decoded) to its original state when needed.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Fixed-Length vs. Variable-Length Encoding
         </h3>
         <p>
@@ -48,7 +48,7 @@ const MainContent = () => {
           <b>longer codes</b> to less frequent ones. This way, the overall size
           of the encoded data is smaller, making the compression efficient.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           How Huffman Encoding Works
         </h3>
         <p>
@@ -83,7 +83,7 @@ const MainContent = () => {
           assigned a short code like <tt>0</tt>, while a rarer letter like
           &lsquo;&rsquo; might be assigned a longer code like 11010.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Decoding Huffman Codes
         </h3>
         <p>
@@ -92,7 +92,7 @@ const MainContent = () => {
           digits (<tt>0</tt> for left, <tt>1</tt> for right), we can reconstruct
           the original message.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Efficiency of Huffman Encoding
         </h3>
         <p>
@@ -107,7 +107,7 @@ const MainContent = () => {
           However, if all characters appear with equal frequency, the space
           savings might not be as significant.
         </p>
-        <h3 className="text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
+        <h3 className="text-base lg:text-2xl font-semibold mt-10 mb-2 hover:underline hover:decoration-slate-500">
           Real-World Applications
         </h3>
         <p>
